@@ -31,3 +31,5 @@ C:\repos\JAApp\src\Web\obj\Debug\net10.0\Web.MvcApplicationPartsAssemblyInfo.cs
 C:\repos\JAApp\src\Web\obj\Debug\net10.0\Web.csproj.Up2Date
 C:\repos\JAApp\src\Web\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
 C:\repos\JAApp\src\Web\bin\Debug\net10.0\Microsoft.OpenApi.dll
+C:\repos\JAApp\src\Web\obj\Debug\net10.0\Web.sourcelink.json
+C:\repos\JAApp\src\Web\bin\Debug\net10.0\Scalar.AspNetCore.dll
