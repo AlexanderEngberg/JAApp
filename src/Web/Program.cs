@@ -1,8 +1,25 @@
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using Ardalis.GuardClauses;
+using Web.Infrastructure.Data;
+using System.Reflection;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("JAAppDb");
+Guard.Against.Null(connectionString, message: "Connection string 'JAAppLocalDb' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(configuration =>
+{
+    configuration.UseSqlServer(connectionString);
+});
+
+builder.Services.AddAutoMapper(configuration => 
+    configuration.AddMaps(Assembly.GetExecutingAssembly()));
+
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
