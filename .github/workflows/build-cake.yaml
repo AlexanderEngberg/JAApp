@@ -22,8 +22,11 @@ jobs:
       with:
         global-json-file: global.json
 
+    - name: Install Cake Tool
+      run: dotnet tool install Cake.Tool --global --version 6.0.0
+
     - name: Restore Cake Tool
-      run: dotnet tool install Cake.Tool --global --version 6.0.0 # Use latest or specific version
+      run: dotnet tool restore
 
     - name: Run Cake Build Script
-      run: dotnet cake --target=Basic --configuration=Release # Runs your build.cake with 'Build' target
+      run: dotnet cake --target=Basic --configuration=Release
