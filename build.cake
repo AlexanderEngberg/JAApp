@@ -1,5 +1,3 @@
-#addin nuget:?package=Cake.Yaml&version=6.0.0
-
 var target = Argument("target", "Basic");
 var configuration = Argument("configuration", "Release");
 var webServerPath = "./src/Web";
