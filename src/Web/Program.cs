@@ -4,19 +4,24 @@ using Ardalis.GuardClauses;
 using Web.Infrastructure.Data;
 using System.Reflection;
 using FluentValidation;
+using Web.Application.Common.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("JAAppDb");
-Guard.Against.Null(connectionString, message: "Connection string 'JAAppLocalDb' not found.");
+Guard.Against.Null(connectionString, message: "Connection string 'JAAppDb' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(configuration =>
 {
-    configuration.UseSqlServer(connectionString);
+    configuration.UseNpgsql(connectionString);
 });
 
 builder.Services.AddAutoMapper(configuration => 
     configuration.AddMaps(Assembly.GetExecutingAssembly()));
+
+builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+builder.Services.AddScoped<ApplicationDbContextInitialiser>();
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

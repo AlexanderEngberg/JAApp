@@ -24,7 +24,7 @@ public class TestingFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 .RemoveAll<DbContextOptions<ApplicationDbContext>>()
                 .AddDbContext<ApplicationDbContext>((sp, options) =>
                 {
-                    options.UseSqlServer(_database.GetConnection());
+                    options.UseNpgsql(_database.GetConnection());
                 });
         });
     }

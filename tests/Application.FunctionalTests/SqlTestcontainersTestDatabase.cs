@@ -1,7 +1,6 @@
 using System.Data.Common;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Respawn;
 using Testcontainers.PostgreSql;
 using Web.Infrastructure.Data;
@@ -25,21 +24,21 @@ public class SqlTestcontainersTestDatabase : ITestDatabase
     
     public async Task InitializeAsync()
     {
-        await _container.StartAsync();
-        await _container.ExecScriptAsync($"CREATE DATABSE {DefaultDatabase}");
 
-        SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(_container.GetConnectionString())
+        await _container.StartAsync();
+        await _container.ExecScriptAsync($"CREATE DATABASE {DefaultDatabase}");
+
+        var builder = new NpgsqlConnectionStringBuilder(_container.GetConnectionString())
         {
-            InitialCatalog = DefaultDatabase
+            Database = DefaultDatabase
         };
 
         _connectionString = builder.ConnectionString;
 
-        _connection = new SqlConnection(_connectionString);
+        _connection = new NpgsqlConnection(_connectionString);
 
         var option = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlServer(_connectionString)
-            .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning))
+            .UseNpgsql(_connectionString)
             .Options;
 
         ApplicationDbContext context = new ApplicationDbContext(option);
@@ -47,7 +46,12 @@ public class SqlTestcontainersTestDatabase : ITestDatabase
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
 
-        _respawner = await Respawner.CreateAsync(_connectionString);
+        await _connection.OpenAsync();
+        _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
+        {
+            DbAdapter = DbAdapter.Postgres
+        });
+        await _connection.CloseAsync();
     }
 
     public DbConnection GetConnection()
@@ -63,7 +67,9 @@ public class SqlTestcontainersTestDatabase : ITestDatabase
 
     public async Task ResetAsync()
     {
-        await _respawner.ResetAsync(_connectionString);
+        await _connection.OpenAsync();
+        await _respawner.ResetAsync(_connection);
+        await _connection.CloseAsync();
     }
 
     public async Task DisposeAsync()
