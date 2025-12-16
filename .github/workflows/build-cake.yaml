@@ -1,32 +1,32 @@
-name: .NET Build with Cake
+# name: .NET Build with Cake
 
-on: 
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-jobs:
-  build:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Get the sources
-      uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
+# on: 
+#   push:
+#     branches:
+#       - main
+#       - master
+#   pull_request:
+# jobs:
+#   build:
+#     name: Build and Test
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Get the sources
+#       uses: actions/checkout@v5
+#       with:
+#         fetch-depth: 0
 
 
-    - name: Install .NET SDK (global.json)
-      uses: actions/setup-dotnet@v5
-      with:
-        global-json-file: global.json
+#     - name: Install .NET SDK (global.json)
+#       uses: actions/setup-dotnet@v5
+#       with:
+#         global-json-file: global.json
 
-    - name: Install Cake Tool
-      run: dotnet tool install Cake.Tool --global --version 6.0.0
+#     - name: Install Cake Tool
+#       run: dotnet tool install Cake.Tool --global --version 6.0.0
 
-    - name: Restore Cake Tool
-      run: dotnet tool restore
+#     - name: Restore Cake Tool
+#       run: dotnet tool restore
 
-    - name: Run Cake Build Script
-      run: dotnet cake --target=Basic --configuration=Release
+#     - name: Run Cake Build Script
+#       run: dotnet cake --target=Basic --configuration=Release
