@@ -20,7 +20,7 @@ jobs:
 
     - name: Lint code
       run: |
-        az bicep --file ./infra/main.bicep
+        az bicep build --file infra/main.bicep
   template:
     needs: lint
     runs-on: ubuntu-latest
